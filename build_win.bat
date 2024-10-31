@@ -1,0 +1,1 @@
+CALL go build -o zip_imagefolder.exe main.go   

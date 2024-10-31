@@ -1,0 +1,1 @@
+go build -o zip_imagefolder main.go   
