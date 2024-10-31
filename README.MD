@@ -24,26 +24,31 @@ from pyimzip import ImageZipProcess, imzip_set_executable
 # make sure the executable is able to be located.
 imzip_set_executable("./zip_imagefolder.exe")
 
-zip = ImageZipProcess(
-    R"..\SomeShotsFolder\Render01",
-    "Render01_archive.zip",
-)
+async def main():
+    zip = ImageZipProcess(
+        R"..\SomeShotsFolder\Render01",
+        "Render01_archive.zip",
+    )
+    
+    # helper function to poll zipping process every 2 seconds.
+    async def poll_zip_task(zip: ImageZipProcess):
+        while not zip.done:
+            if zip.progress:
+                print("progress:", zip.progress)
+            await asyncio.sleep(2)
+    
+    # Set up tasks
+    waiting = asyncio.Task(zip.start_zipping())
+    printing = asyncio.Task(poll_zip_task(zip))
+    
+    result = await asyncio.gather(waiting, printing)
+    # output from waiting task (zip.start_zipping)
+    # is the folder "..\SomeShotsFolder\Render01\Render01_archive.zip"
+    folder = result[0]
+    print(folder)
 
-# helper function to poll zipping process every 2 seconds.
-async def poll_zip_task(zip: ImageZipProcess):
-    while not zip.done:
-        if zip.progress:
-            print("progress:", zip.progress)
-        await asyncio.sleep(2)
-
-# Set up tasks
-waiting = asyncio.Task(zip.start_zipping())
-printing = asyncio.Task(poll_zip_task(zip))
-
-result = await asyncio.gather(waiting, printing)
-# output from waiting task (zip.start_zipping)
-# is the folder "..\SomeShotsFolder\Render01\Render01_archive.zip"
-folder = result[0] 
+if __name__ == "__main__":
+    asyncio.run(main())
 ```
 
 both TU's contain demo files.
