@@ -13,6 +13,10 @@ or, if you use windows,
 
 `./zip_imagefolder.exe -dir "X:\some\dir\with\images" -out "my_folder.zip"`
 
+Currently it looks for the following extensions:
+
+`"png", "exr", "jpg", "jpeg", "JPG", "JPEG", "EXR", "tiff", "TIFF"`
+
 I included some python stuff to run jobs async, as a treat.
 
 The easiest way to use it, is as follows:
@@ -21,8 +25,10 @@ The easiest way to use it, is as follows:
 import asyncio
 from pyimzip import ImageZipProcess, imzip_set_executable
 
-# make sure the executable is able to be located.
+
+# Make sure the executable is able to be located.
 imzip_set_executable("./zip_imagefolder.exe")
+
 
 async def main():
     zip = ImageZipProcess(
@@ -30,7 +36,7 @@ async def main():
         "Render01_archive.zip",
     )
     
-    # helper function to poll zipping process every 2 seconds.
+    # Helper function to poll zipping process every 2 seconds.
     async def poll_zip_task(zip: ImageZipProcess):
         while not zip.done:
             if zip.progress:
@@ -42,10 +48,11 @@ async def main():
     printing = asyncio.Task(poll_zip_task(zip))
     
     result = await asyncio.gather(waiting, printing)
-    # output from waiting task (zip.start_zipping)
+    # Output from waiting task (zip.start_zipping)
     # is the folder "..\SomeShotsFolder\Render01\Render01_archive.zip"
     folder = result[0]
     print(folder)
+
 
 if __name__ == "__main__":
     asyncio.run(main())
