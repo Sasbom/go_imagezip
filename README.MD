@@ -3,7 +3,7 @@
 This tool can be used cross platform, just build it using the packages contained within.
 If you want to register it, just use `go install` inside the files instead of `go build`.
 
-#### Requires GoLang v1.21 or above.
+#### Requires GoLang v1.21 or above to build!
 
 Use couldn't be simpler, just run:
 
